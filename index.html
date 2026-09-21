@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ OOP Calculator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono-font { font-family: 'JetBrains Mono', monospace; }
+        .btn-press:active { transform: scale(0.95); }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <!-- Header -->
+    <header class="w-full max-w-lg mb-6 flex justify-between items-center bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-lg">
+        <h1 class="text-xl font-bold text-indigo-400 flex items-center gap-2">
+            <i class="fa-solid fa-calculator"></i> C++ OOP Calculator
+        </h1>
+        <span class="text-xs text-slate-400 bg-slate-900 px-3 py-1 rounded-full border border-slate-700">Web GUI</span>
+    </header>
+
+    <!-- Main Calculator Container -->
+    <main class="w-full max-w-lg space-y-6">
+        
+        <!-- Calculator Card -->
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-2xl">
+            <!-- Display -->
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 mb-6 shadow-inner text-right min-h-[100px] flex flex-col justify-end">
+                <div id="expressionDisplay" class="mono-font text-slate-400 text-sm h-6 overflow-x-auto whitespace-nowrap mb-1"></div>
+                <div id="mainDisplay" class="mono-font text-white text-3xl font-bold tracking-wider overflow-x-auto whitespace-nowrap">0</div>
+            </div>
+
+            <!-- Keypad -->
+            <div class="grid grid-cols-4 gap-3">
+                <!-- Row 1 -->
+                <button onclick="clearAll()" class="btn-press bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 border border-rose-500/30 p-4 rounded-xl font-bold text-lg transition">AC</button>
+                <button onclick="deleteLast()" class="btn-press bg-slate-700 text-slate-200 hover:bg-slate-600 border border-slate-600 p-4 rounded-xl font-bold text-lg transition"><i class="fa-solid fa-backspace"></i></button>
+                <button onclick="appendOperator('/')" class="btn-press bg-indigo-600/30 text-indigo-300 hover:bg-indigo-600/50 border border-indigo-500/30 p-4 rounded-xl font-bold text-xl transition">÷</button>
+                <button onclick="appendOperator('*')" class="btn-press bg-indigo-600/30 text-indigo-300 hover:bg-indigo-600/50 border border-indigo-500/30 p-4 rounded-xl font-bold text-xl transition">×</button>
+
+                <!-- Row 2 -->
+                <button onclick="appendNum('7')" class="btn-press bg-slate-700/60 text-white hover:bg-slate-700 border border-slate-600/50 p-4 rounded-xl font-bold text-xl transition">7</button>
+                <button onclick="appendNum('8')" class="btn-press bg-slate-700/60 text-white hover:bg-slate-700 border border-slate-600/50 p-4 rounded-xl font-bold text-xl transition">8</button>
+                <button onclick="appendNum('9')" class="btn-press bg-slate-700/60 text-white hover:bg-slate-700 border border-slate-600/50 p-4 rounded-xl font-bold text-xl transition">9</button>
+                <button onclick="appendOperator('-')" class="btn-press bg-indigo-600/30 text-indigo-300 hover:bg-indigo-600/50 border border-indigo-500/30 p-4 rounded-xl font-bold text-xl transition">−</button>
+
+                <!-- Row 3 -->
+                <button onclick="appendNum('4')" class="btn-press bg-slate-700/60 text-white hover:bg-slate-700 border border-slate-600/50 p-4 rounded-xl font-bold text-xl transition">4</button>
+                <button onclick="appendNum('5')" class="btn-press bg-slate-700/60 text-white hover:bg-slate-700 border border-slate-600/50 p-4 rounded-xl font-bold text-xl transition">5</button>
+                <button onclick="appendNum('6')" class="btn-press bg-slate-700/60 text-white hover:bg-slate-700 border border-slate-600/50 p-4 rounded-xl font-bold text-xl transition">6</button>
+                <button onclick="appendOperator('+')" class="btn-press bg-indigo-600/30 text-indigo-300 hover:bg-indigo-600/50 border border-indigo-500/30 p-4 rounded-xl font-bold text-xl transition">+</button>
+
+                <!-- Row 4 -->
+                <button onclick="appendNum('1')" class="btn-press bg-slate-700/60 text-white hover:bg-slate-700 border border-slate-600/50 p-4 rounded-xl font-bold text-xl transition">1</button>
+                <button onclick="appendNum('2')" class="btn-press bg-slate-700/60 text-white hover:bg-slate-700 border border-slate-600/50 p-4 rounded-xl font-bold text-xl transition">2</button>
+                <button onclick="appendNum('3')" class="btn-press bg-slate-700/60 text-white hover:bg-slate-700 border border-slate-600/50 p-4 rounded-xl font-bold text-xl transition">3</button>
+                <button onclick="calculateResult()" class="btn-press row-span-2 bg-indigo-600 text-white hover:bg-indigo-500 border border-indigo-400/30 p-4 rounded-xl font-bold text-2xl transition flex items-center justify-center shadow-lg shadow-indigo-600/20">=</button>
+
+                <!-- Row 5 -->
+                <button onclick="appendNum('0')" class="btn-press col-span-2 bg-slate-700/60 text-white hover:bg-slate-700 border border-slate-600/50 p-4 rounded-xl font-bold text-xl transition">0</button>
+                <button onclick="appendDot()" class="btn-press bg-slate-700/60 text-white hover:bg-slate-700 border border-slate-600/50 p-4 rounded-xl font-bold text-xl transition">.</button>
+            </div>
+        </div>
+
+        <!-- History Section Below -->
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-slate-200 flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-indigo-400"></i> Calculation History
+                </h2>
+                <button onclick="clearHistory()" class="text-xs text-slate-400 hover:text-rose-400 transition flex items-center gap-1">
+                    <i class="fa-solid fa-trash"></i> Clear History
+                </button>
+            </div>
+            
+            <div id="historyList" class="space-y-2 max-h-52 overflow-y-auto pr-1">
+                <p id="emptyHistoryMsg" class="text-slate-500 text-sm text-center py-4 italic">No recent calculations yet.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let currentInput = "0";
+        let previousInput = "";
+        let selectedOperator = null;
+        let shouldResetInput = false;
+
+        const mainDisplay = document.getElementById("mainDisplay");
+        const expressionDisplay = document.getElementById("expressionDisplay");
+        const historyList = document.getElementById("historyList");
+
+        // OOP Simulation Layer in JS matching C++ concepts
+        class Operation {
+            calculate(a, b) { throw new Error("Abstract method"); }
+        }
+        class Addition extends Operation { calculate(a, b) { return a + b; } }
+        class Subtraction extends Operation { calculate(a, b) { return a - b; } }
+        class Multiplication extends Operation { calculate(a, b) { return a * b; } }
+        class Division extends Operation {
+            calculate(a, b) {
+                if (b === 0) throw new Error("Cannot divide by zero");
+                return a / b;
+            }
+        }
+
+        const operations = {
+            '+': new Addition(),
+            '-': new Subtraction(),
+            '*': new Multiplication(),
+            '/': new Division()
+        };
+
+        function updateDisplay() {
+            mainDisplay.textContent = currentInput;
+            if (selectedOperator && previousInput !== "") {
+                const opSymbol = selectedOperator === '*' ? '×' : selectedOperator === '/' ? '÷' : selectedOperator;
+                expressionDisplay.textContent = `${previousInput} ${opSymbol}`;
+            } else {
+                expressionDisplay.textContent = "";
+            }
+        }
+
+        function appendNum(num) {
+            if (currentInput === "0" || shouldResetInput) {
+                currentInput = num;
+                shouldResetInput = false;
+            } else {
+                currentInput += num;
+            }
+            updateDisplay();
+        }
+
+        function appendDot() {
+            if (shouldResetInput) {
+                currentInput = "0.";
+                shouldResetInput = false;
+            } else if (!currentInput.includes(".")) {
+                currentInput += ".";
+            }
+            updateDisplay();
+        }
+
+        function appendOperator(op) {
+            if (selectedOperator && !shouldResetInput) {
+                calculateResult();
+            }
+            previousInput = currentInput;
+            selectedOperator = op;
+            shouldResetInput = true;
+            updateDisplay();
+        }
+
+        function calculateResult() {
+            if (!selectedOperator || previousInput === "") return;
+
+            const num1 = parseFloat(previousInput);
+            const num2 = parseFloat(currentInput);
+            const opSymbol = selectedOperator === '*' ? '×' : selectedOperator === '/' ? '÷' : selectedOperator;
+
+            try {
+                const operationObj = operations[selectedOperator];
+                const result = operationObj.calculate(num1, num2);
+                
+                addHistoryItem(`${num1} ${opSymbol} ${num2}`, result);
+
+                currentInput = String(result);
+                selectedOperator = null;
+                previousInput = "";
+                shouldResetInput = true;
+                updateDisplay();
+            } catch (err) {
+                currentInput = "Error";
+                shouldResetInput = true;
+                updateDisplay();
+            }
+        }
+
+        function clearAll() {
+            currentInput = "0";
+            previousInput = "";
+            selectedOperator = null;
+            shouldResetInput = false;
+            updateDisplay();
+        }
+
+        function deleteLast() {
+            if (shouldResetInput) return;
+            if (currentInput.length === 1 || currentInput === "Error") {
+                currentInput = "0";
+            } else {
+                currentInput = currentInput.slice(0, -1);
+            }
+            updateDisplay();
+        }
+
+        function addHistoryItem(expr, res) {
+            const emptyMsg = document.getElementById("emptyHistoryMsg");
+            if (emptyMsg) emptyMsg.remove();
+
+            const item = document.createElement("div");
+            item.className = "flex justify-between items-center bg-slate-900 border border-slate-700/60 p-3 rounded-xl text-sm font-mono";
+            item.innerHTML = `
+                <span class="text-slate-400">${expr} =</span>
+                <span class="text-indigo-300 font-bold">${res}</span>
+            `;
+            historyList.prepend(item);
+        }
+
+        function clearHistory() {
+            historyList.innerHTML = '<p id="emptyHistoryMsg" class="text-slate-500 text-sm text-center py-4 italic">No recent calculations yet.</p>';
+        }
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key >= '0' && e.key <= '9') appendNum(e.key);
+            else if (e.key === '.') appendDot();
+            else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') appendOperator(e.key);
+            else if (e.key === 'Enter' || e.key === '=') calculateResult();
+            else if (e.key === 'Backspace') deleteLast();
+            else if (e.key === 'Escape') clearAll();
+        });
+    </script>
+</body>
+</html>
